@@ -4,5 +4,6 @@
     <mat-card-content>{{item.description}}</mat-card-content>
     <mat-card-actions align="end">
         <button mat-button>Delete</button>
+        <button mat-button (click)="callLambda()">Call Lambda</button>
     </mat-card-actions>
 </mat-card>
