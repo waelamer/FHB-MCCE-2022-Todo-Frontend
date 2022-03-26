@@ -32,7 +32,7 @@ export class SettingsComponent implements OnInit {
   }
 
   showSnackBar(message: string, panelClass: string = "info") {
-    this.snackBar.open(message, undefined, { duration: 5000, panelClass: [panelClass] });
+    this.snackBar.open(message, undefined, { duration: 5000, panelClass: [panelClass], verticalPosition: "bottom" });
   }
 
   saveConfiguration () {
