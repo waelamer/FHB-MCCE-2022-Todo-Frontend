@@ -1,0 +1,28 @@
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.appContainer {
+  height: 100vh;
+}
+
+.appToolbar {
+  height: 64px;
+}
+
+::ng-deep .info {
+  background-color: #3f51b5;
+}
+
+::ng-deep .error {
+  background-color: #f44336;
+}
+
+::ng-deep .success {
+  background-color: #2E7D32;
+}
+
+.contentContainer {
+  height:calc(100vh - 64px);
+  overflow-y: scroll;
+}
