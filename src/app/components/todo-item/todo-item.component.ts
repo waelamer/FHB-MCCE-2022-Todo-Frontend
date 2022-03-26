@@ -62,7 +62,7 @@ export class TodoItemComponent implements OnInit {
   }
 
   showSnackBar(message: string, panelClass: string = "info") {
-    this.snackBar.open(message, undefined, { duration: 5000, panelClass: [panelClass], verticalPosition: "top" });
+    this.snackBar.open(message, undefined, { duration: 5000, panelClass: [panelClass] });
   }
 
   getStateText(): string {

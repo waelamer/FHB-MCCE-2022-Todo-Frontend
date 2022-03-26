@@ -22,13 +22,8 @@
   background-color: #2E7D32;
 }
 
-::ng-deep .info, .error, .success {
-  padding: 20px;
-  margin: 20px !important;
-}
-
 ::ng-deep .cdk-overlay-pane {
-  margin-bottom: 82px !important; 
+  margin-bottom: 90px !important; 
 }
 
 .contentContainer {
