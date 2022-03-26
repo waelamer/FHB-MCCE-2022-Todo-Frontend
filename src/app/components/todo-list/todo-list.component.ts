@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChildren, QueryList} from '@angular/core';
 import { TodoItem } from 'src/app/interfaces/todo-item/todo-item';
 import { TodoService } from 'src/app/services/todo/todo.service';
 import {MatDialog} from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
   styleUrls: ['./todo-list.component.css']
 })
 
-export class TodoListComponent implements OnInit, AfterViewInit {
+export class TodoListComponent implements OnInit {
 
   items: TodoItem[] = [];
   @ViewChildren('itemComponent') itemComponents!: QueryList<TodoItemComponent>;
@@ -38,12 +38,6 @@ export class TodoListComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit() {
-    this.itemComponents.changes.subscribe(() => {
-      console.log(this.itemComponents.toArray());
-   });
-  }
-
   addItem (): void {
     const dialogRef = this.dialog.open(EditDialogComponent, {
       data: {
@@ -57,9 +51,14 @@ export class TodoListComponent implements OnInit, AfterViewInit {
       if (item) {
         this.showSnackBar("Creating Item...");
         this.todoService.putItem(item)
-          .then(() => {
+          .then(() => { 
             this.showSnackBar("Item successfully added!", "success");
-            
+
+            let changeSubscription = this.itemComponents.changes.subscribe((items) => {
+              let addedItemEle = items.toArray().pop().todoItemContainer.nativeElement;
+              addedItemEle.scrollIntoView();
+              changeSubscription.unsubscribe();
+            });
           })
           .catch(() => this.showSnackBar("Error during the creation of the todo! Check error message for more details...", "error"));
       }

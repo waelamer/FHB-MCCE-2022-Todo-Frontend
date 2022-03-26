@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ViewChild, ElementRef } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import { TodoItem } from '../../interfaces/todo-item/todo-item';
 import { TodoItemState } from 'src/app/interfaces/todo-item/todo-item-state'; 
@@ -16,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class TodoItemComponent implements OnInit {
 
   @Input() item!: TodoItem;
-  @Output() newItemEvent = new EventEmitter<string>();
+  @ViewChild("itemContainer") todoItemContainer!: ElementRef;
 
   constructor(
     public dialog: MatDialog,
