@@ -21,16 +21,6 @@ export class SettingsComponent implements OnInit {
     this.awsConfig = this.dataService.awsConfig;
   }
 
-  async runConfigurationTest() {
-    try {
-      await this.dataService.healthcheck();
-      this.showSnackBar("Connection to AWS Services works!", "success");
-    } catch (err) {
-      console.error(err);
-      this.showSnackBar("Connection to AWS Services failed! Take a look at the error message for more details...", "error");
-    }
-  }
-
   showSnackBar(message: string, panelClass: string = "info") {
     this.snackBar.open(message, undefined, { duration: 5000, panelClass: [panelClass], verticalPosition: "bottom" });
   }

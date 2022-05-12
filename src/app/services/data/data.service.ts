@@ -2,13 +2,7 @@ import { Injectable } from '@angular/core';
 import * as AWS from 'aws-sdk';
 import { AwsConfig } from 'src/app/interfaces/aws-config/aws-config';
 import { TodoItem } from 'src/app/interfaces/todo-item/todo-item';
-
-export interface AwsLambdaParams {
-  FunctionName: string,
-  InvocationType: string,
-  LogType: string,
-  Payload?: string
-}
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -17,13 +11,12 @@ export interface AwsLambdaParams {
 export class DataService {
   lambda!: AWS.Lambda;
   awsConfig: AwsConfig = {
-    region: "",
-    accessKeyId: "",
-    secretAccessKey: "",
-    sessionToken: ""
+    getTodosUrl: "",
+    updateTodosUrl: "",
+    deleteTodosUrl: ""
   };
   
-  constructor() {
+  constructor(private http: HttpClient) {
     let awsConfig = localStorage.getItem("awsConfig");
 
     if (awsConfig) {
@@ -39,66 +32,45 @@ export class DataService {
   }
 
   getTodoItems (): Promise<any> {
-    let params : AwsLambdaParams = {
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      FunctionName: "arn:aws:lambda:us-east-1:344646043511:function:getTodoItems"
-    }
-
-    let response: Promise<any> = this.callLambda(params); 
+    let response: Promise<any> = this.callLambdaGet(this.awsConfig.getTodosUrl); 
     return response;
   }
 
   updateTodoItem (item: TodoItem): Promise<any> {
-    let params : AwsLambdaParams = {
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      FunctionName: "arn:aws:lambda:us-east-1:344646043511:function:updateItem",
-      Payload: JSON.stringify(item)
-    }
-
-    let response: Promise<any> = this.callLambda(params); 
+    let requestBody = JSON.stringify(item)
+    let response: Promise<any> = this.callLambdaPost(this.awsConfig.updateTodosUrl, requestBody); 
     return response;
   }
 
   deleteTodoItem (item: TodoItem): Promise<any> {
-    let params : AwsLambdaParams = {
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      FunctionName: "arn:aws:lambda:us-east-1:344646043511:function:deleteItem",
-      Payload: JSON.stringify(item)
-    }
-
-    let response: Promise<any> = this.callLambda(params); 
+    let requestBody = JSON.stringify(item)
+    let response: Promise<any> = this.callLambdaPost(this.awsConfig.deleteTodosUrl, requestBody); 
     return response;
   }
 
-  callLambda(params: AwsLambdaParams): Promise<any> {
+  callLambdaGet(url: string): Promise<any> {
+    const headers = { "Access-Control-Allow-Origin": "*" };
+
     return new Promise((resolve, reject) => {
-      this.lambda.invoke(params, function(err, data) {
-        if (err) {
-          reject(err);
-        }
-        else {
-          let payload = JSON.parse(<string>data.Payload)
-          resolve(payload);
-        }   
-      });
+      this.http
+        .get(url, { headers })
+        .subscribe(
+          data => resolve(data),
+          error => reject(error)
+        )
     })
   }
 
-  healthcheck() { 
-    let params = {
-      FunctionName: 'arn:aws:lambda:us-east-1:344646043511:function:HelloWorld',
-      InvocationType: "RequestResponse",
-      LogType: "None",
-      Payload: JSON.stringify({
-        "key1": "value1",
-        "key2": "value2",
-        "key3": "value3"
-      }),
-    };
+  callLambdaPost(url: string, requestBody: any): Promise<any> {
+    const headers = { "Access-Control-Allow-Origin": "*" };
 
-    return this.callLambda(params);
+    return new Promise((resolve, reject) => {
+      this.http
+        .post<any>(url, requestBody, { headers })
+        .subscribe(
+          data => resolve(data),
+          error => reject(error)
+        )
+    })
   }
 }

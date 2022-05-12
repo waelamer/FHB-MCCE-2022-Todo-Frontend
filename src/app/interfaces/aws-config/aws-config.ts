@@ -1,6 +1,5 @@
 export interface AwsConfig {
-    region: string;
-    accessKeyId: string;
-    secretAccessKey: string;
-    sessionToken: string;
+    getTodosUrl: string;
+    updateTodosUrl: string;
+    deleteTodosUrl: string;
 }
