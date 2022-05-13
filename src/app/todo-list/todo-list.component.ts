@@ -5,11 +5,12 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './todo-list.component.html',
   styleUrls: ['./todo-list.component.css']
 })
-export class TodoListComponent implements OnInit {
+export class TodoListComponent {
 
   constructor() { }
 
-  ngOnInit(): void {
-  }
+  // ngOnInit(): void 
+  // {
+  // }
 
 }

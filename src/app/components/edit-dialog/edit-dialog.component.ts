@@ -8,14 +8,17 @@ import { TodoItemState } from 'src/app/interfaces/todo-item/todo-item-state';
   templateUrl: './edit-dialog.component.html',
   styleUrls: ['./edit-dialog.component.css']
 })
-export class EditDialogComponent implements OnInit {
+export class EditDialogComponent {
   itemState = TodoItemState;
 
   constructor(
     public dialogRef: MatDialogRef<EditDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
-
-  ngOnInit(): void {
+  ) 
+  { 
   }
+
+  // ngOnInit(): void 
+  // {
+  // }
 }
