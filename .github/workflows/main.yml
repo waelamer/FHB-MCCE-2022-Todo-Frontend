@@ -15,4 +15,6 @@ jobs:
         run: |
           echo ${{ steps.Execute_Flow.outputs.response }}
           echo ${{ fromJson(steps.Execute_Flow.outputs.response).id }}
+          echo ${{ fromJson(steps.Execute_Flow.outputs.response).lastUpdate }}
+          echo ${{ fromJson(steps.Execute_Flow.outputs.response).createdAt }}
     
