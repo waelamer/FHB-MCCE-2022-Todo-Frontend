@@ -11,8 +11,9 @@ jobs:
           url: "https://wael.my.tricentis.com/_e2g/api/agents"
           method: 'GET'
           customHeaders: '{"Authorization":"Bearer eyJraWQiOiIteE91bjMteTlmX25Ka19qajZWaHZxcTdSdGdIc0xCNzRTZ3JROFhfNktVIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjRNcFJSWWJhMGNMdTRaTDJUYVRRbldFYzNNUEhiYk5FMnNKaGJDbGVJMjgiLCJpc3MiOiJodHRwczovL3dhZWwub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTY1NTQ0NjIwNiwiZXhwIjoxNjU1NDQ5ODA2LCJjaWQiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwic2NwIjpbIkUyR0FwaSJdLCJzdWIiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwibmFtZSI6IiAifQ.UxBx2zAAHVlaZWgyUdzbRhqxilricjZkSr2vH78xFf3oBjjMxdVqxbnpxWVrBv4w0Z0oe20PlE0QnGzeISm3W41o8-Rh1HiF-EvGVpAd_0nk-bDV_qcnI1NhNtQi8GYMtHXgTHykOOIx8zG2i3HtqMglhucK-SEnnVGSiNH1TmNBNILNRHAZdOwXsUxq0UcMTI_FubaSFb3_ICE5Y_pEASGh-kdkBY4qR9XT52EJSILOh0aYbVlCCFbIosWFg4aab0DzQuxbTYucCyQ48RUeG6a57cyM1zWuM1rRk_vIyMyvCjz6MeAw6mt_QXmrv0-4EDYNwXV03a_JZ1YA6dyI4A"}'
-      - name: Show_Response
+      - name: Show Response
         run: |
-          echo ${{ steps.myRequest.outputs.response }}
+          echo ${{ steps.Execute_Flow.outputs.response }}
           echo ${{ fromJson(steps.myRequest.outputs.response).id }}
+
     
