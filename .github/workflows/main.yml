@@ -14,6 +14,5 @@ jobs:
       - name: Show Response
         run: |
           echo ${{ steps.Execute_Flow.outputs.response }}
-          echo ${{ fromJson(steps.Execute_Flow.outputs.response).id }}
 
     
