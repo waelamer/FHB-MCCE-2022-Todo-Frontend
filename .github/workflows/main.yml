@@ -11,7 +11,7 @@ jobs:
           url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=${{secrets.TOSCA_AUTH_CLIENT_ID}}&client_secret=${{secrets.TOSCA_AUTH_CLIENT_SECRET}}&scope=E2GApi&grant_type=client_credentials"
           method: 'POST'
           customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'          
-      - name: Show Response
+      - name:  Tosca Authetication >> Show Response
         run: |
           echo ${{ steps.Tosca_Authetication.outputs.response }}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
@@ -28,7 +28,7 @@ jobs:
           customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
           bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           # data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
-      - name: Show Response
+      - name: Tosca TEST AGENT >> Show Response
         run: |
           echo "Tosca ExecuteFlow"
           echo ${{ steps.Tosca_AGENT.outputs.response }}
@@ -47,7 +47,7 @@ jobs:
           customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
           bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
-      - name: Show Response
+      - name: Tosca ExecuteFlow >> Show Response
         run: |
           echo "Tosca ExecuteFlow"
           echo ${{ steps.Tosca_ExecuteFlow.outputs.response }}
@@ -64,7 +64,7 @@ jobs:
           method: 'GET'
           bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
-      - name: Show Response
+      - name: Tosca GetFlowStatus >> Show Response
         run: |
           echo "Tosca GetFlowStatus"
           echo $TOSCA_AUTH_EXECUTEDFLOW_ID
