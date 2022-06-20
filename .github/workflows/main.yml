@@ -9,6 +9,9 @@ jobs:
         run: |
           echo "Tosca Authetication"
           echo ${{secrets.TOSCA_AUTH_CLIENT_ID}}
+          echo $TOSCA_AUTH_CLIENT_ID
+        env:
+          TOSCA_AUTH_CLIENT_ID: ${{secrets.TOSCA_AUTH_CLIENT_ID}}}
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         run: |
@@ -21,4 +24,3 @@ jobs:
         id: Deploy_Frontend_TEST
         run: |
           echo "Deploy TODO Frontend Test"
-
