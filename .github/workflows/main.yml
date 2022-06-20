@@ -1,8 +1,10 @@
 name: Trigger-Test
 on: [push]
 jobs:
-  build-test:
+  TODO-APP-CI:
     runs-on: "ubuntu-latest"
+    env:
+      TOSCA_AUTH_Bearer: ""
     steps:
       - name: Tosca Authetication
         id: Tosca_Authetication
@@ -18,8 +20,7 @@ jobs:
           echo ${{ steps.Tosca_Authetication.outputs.response.access_token }}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           echo "Tosca Authetication"
-        env:
-          TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          $TOSCA_AUTH_Bearer= ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         run: |
@@ -27,7 +28,7 @@ jobs:
           echo $TOSCA_AUTH_Bearer
           echo "begin curl"
           curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
-          --header 'Authorization: Bearer eyJraWQiOiIteE91bjMteTlmX25Ka19qajZWaHZxcTdSdGdIc0xCNzRTZ3JROFhfNktVIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULk9USGF0cGc5T24yVUtuNER5UmVxRUY4LTdWZXhOYUlJbXg3TDNOenNLMmMiLCJpc3MiOiJodHRwczovL3dhZWwub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTY1NTczODE0OCwiZXhwIjoxNjU1NzQxNzQ4LCJjaWQiOiJTd2FnZ2VyIiwidWlkIjoiMDB1NDYycTJ6aTlYMTlyMHkweDciLCJzY3AiOlsiRTJHQXBpIiwicHJvZmlsZSIsIm9wZW5pZCIsImVtYWlsIl0sImF1dGhfdGltZSI6MTY1NTczODEyOSwic3ViIjoid2FlbC5hbWVyQGdtYWlsLmNvbSIsIm5hbWUiOiJXYWVsIEFtZXIiLCJncm91cHMiOlsiRXZlcnlvbmUiLCJUcmljZW50aXMgQ2xvdWQgdXNlcnMiXSwiZW1haWwiOiJ3YWVsLmFtZXJAZ21haWwuY29tIn0.cK32CWZ4O9oJ33JEOPjOVjC9ramBDE1bO9B-Eq71yfoiaydyGkqhD_MXOLhdmcIhm_ujG-M2_Daj4QwiizOHBGuVsrCxzIldZuzpoh--22dDBBafdRIsP9x7ZM9H7pWFB1Mw4pb6NboT8gkXtBrcJfOxmKxiaq2VLmViGEiA-eUJneFeYQyTzzodxn2HzWpBePEXHkk-lMDb3Ya2Th1_nP2ae6k0LPVQsALWMYZDzk9tYYp8VB2RtmGsaStC3G9KiJzcxxyNPnJ4UkddqNk-wMLY8UOzgf9TYuqNaOmXLk3SdPCPgPz9eazkp6GWRHSsBUUfjIL8mskVr3rcU4WXtw' \
+          --header 'Authorization: Bearer $TOSCA_AUTH_Bearer' \
           --header 'Content-Type: application/json' \
           --header 'X-Tricentis: OK' \
           --header 'Accept-Language: de'
@@ -35,6 +36,12 @@ jobs:
         id: Tosca_GetFlowStatus
         run: |
           echo "Tosca GetFlowStatus"
+           echo "begin curl"
+          curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
+          --header 'Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}' \
+          --header 'Content-Type: application/json' \
+          --header 'X-Tricentis: OK' \
+          --header 'Accept-Language: de'
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
