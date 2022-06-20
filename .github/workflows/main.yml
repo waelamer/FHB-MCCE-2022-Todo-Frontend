@@ -24,7 +24,7 @@ jobs:
           TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
         with:
           url: "https://wael.my.tricentis.com/_e2g/api/agents"
-          method: 'GIT'
+          method: 'GET'
           customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
           bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           # data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
