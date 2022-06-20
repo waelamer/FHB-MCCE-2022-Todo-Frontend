@@ -1,4 +1,4 @@
-name: Trigger-Test
+name: TODO-APP-CI
 on: [push]
 jobs:
   TODO-APP-CI:
@@ -48,17 +48,7 @@ jobs:
           echo "Tosca GetFlowStatus"
           echo $TOSCA_AUTH_EXECUTEDFLOW_ID
           echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
-          echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}
-      # - name: Tosca GetFlowStatus
-      #   id: Tosca_GetFlowStatus
-      #   run: |
-      #     echo "Tosca GetFlowStatus"
-      #      echo "begin curl"
-      #     curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
-      #     --header 'Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}' \
-      #     --header 'Content-Type: application/json' \
-      #     --header 'X-Tricentis: OK' \
-      #     --header 'Accept-Language: de'
+          echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
