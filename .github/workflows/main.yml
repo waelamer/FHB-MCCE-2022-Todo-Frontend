@@ -8,7 +8,7 @@ jobs:
         id: Tosca_Authetication
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_secret=Tricentis_Cloud_API&client_id=rp3qiVhaX5hSff_h_6icMKHeOYE4zGk5pGGf3q_4&scope=E2GApi&grant_type=client_credentials"
+          url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=Tricentis_Cloud_API&client_secret=rp3qiVhaX5hSff_h_6icMKHeOYE4zGk5pGGf3q_4&scope=E2GApi&grant_type=client_credentials"
           method: 'POST'
           customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'
           # data: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}","client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}","scope","E2GApi","grant_type":"client_credentials"}'
