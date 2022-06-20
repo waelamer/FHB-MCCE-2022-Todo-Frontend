@@ -3,8 +3,6 @@ on: [push]
 jobs:
   TODO-APP-CI:
     runs-on: "ubuntu-latest"
-    env:
-      TOSCA_AUTH_Bearer: ""
     steps:
       - name: Tosca Authetication
         id: Tosca_Authetication
@@ -12,36 +10,56 @@ jobs:
         with:
           url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=${{secrets.TOSCA_AUTH_CLIENT_ID}}&client_secret=${{secrets.TOSCA_AUTH_CLIENT_SECRET}}&scope=E2GApi&grant_type=client_credentials"
           method: 'POST'
-          customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'
-          # data: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}","client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}","scope","E2GApi","grant_type":"client_credentials"}'
+          customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'          
       - name: Show Response
         run: |
           echo ${{ steps.Tosca_Authetication.outputs.response }}
-          echo ${{ steps.Tosca_Authetication.outputs.response.access_token }}
+          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
-          echo "Tosca Authetication"
-          echo "$TOSCA_AUTH_Bearer= ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
+          
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
+        uses: fjogeleit/http-request-action@v1
+        env:
+          TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+        with:
+          url: "https://fhbkhorvath.my.tricentis.com/default/_e2g/api/flowExecutions"
+          method: 'POST'
+          customHeaders: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}","Content-Type":"application/json","X-Tricentis":"OK"}'
+          data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
+      - name: Show Response
         run: |
           echo "Tosca ExecuteFlow"
-          echo $TOSCA_AUTH_Bearer
-          echo "begin curl"
-          curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
-          --header 'Authorization: Bearer $TOSCA_AUTH_Bearer' \
-          --header 'Content-Type: application/json' \
-          --header 'X-Tricentis: OK' \
-          --header 'Accept-Language: de'
+          echo ${{ steps.Tosca_ExecuteFlow.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response) }}
+          echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+
       - name: Tosca GetFlowStatus
         id: Tosca_GetFlowStatus
+        uses: fjogeleit/http-request-action@v1
+        env:
+          TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
         run: |
           echo "Tosca GetFlowStatus"
-           echo "begin curl"
-          curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
-          --header 'Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}' \
-          --header 'Content-Type: application/json' \
-          --header 'X-Tricentis: OK' \
-          --header 'Accept-Language: de'
+          echo $TOSCA_AUTH_EXECUTEDFLOW_ID
+        with:
+          url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/$TOSCA_AUTH_EXECUTEDFLOW_ID"
+          method: 'POST'
+          customHeaders: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}","Content-Type":"application/json","X-Tricentis":"OK"}'
+      - name: Show Response
+        run: |
+          echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}
+      # - name: Tosca GetFlowStatus
+      #   id: Tosca_GetFlowStatus
+      #   run: |
+      #     echo "Tosca GetFlowStatus"
+      #      echo "begin curl"
+      #     curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
+      #     --header 'Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}' \
+      #     --header 'Content-Type: application/json' \
+      #     --header 'X-Tricentis: OK' \
+      #     --header 'Accept-Language: de'
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
