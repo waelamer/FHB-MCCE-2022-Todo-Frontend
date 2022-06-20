@@ -70,7 +70,13 @@ jobs:
           echo $TOSCA_AUTH_EXECUTEDFLOW_ID
           echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
           echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
+      
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
           echo "Deploy TODO Frontend Test"
+          curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
+            --header 'Authorization: Bearer eyJraWQiOiIteE91bjMteTlmX25Ka19qajZWaHZxcTdSdGdIc0xCNzRTZ3JROFhfNktVIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULml2THlQb3NJd2o2MEdpZWlDak5NamhWSjNacUFWTkdzQUlsYkNacGp1aW8iLCJpc3MiOiJodHRwczovL3dhZWwub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTY1NTc0NTIyMSwiZXhwIjoxNjU1NzQ4ODIxLCJjaWQiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwic2NwIjpbIkUyR0FwaSJdLCJzdWIiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwibmFtZSI6IiAifQ.vuzVLPxkJJ_hRtIgE0I_dCWUDaODlrs1RHI0RSpQChP4_ajgnoWY3oeyz2Ax0D_Gv1p4enFN452a_OeT07hz4LjNZhBc-qD-AWdAIj9yevxKHm3qnmLuVqOsn9S7L1kjKommvSk5We7DjhtQQUVYVg76AaHLYowYfs0M1LwlrdVd0Jx2chm8CCbB0KiMUVeWr2rue7Dzrmxcns87Y7sCHnTUIeDBOeyXP_wMLEnCnJVPKFtGvjlGa5u8Vq6z9uanBuM5Lt1Y3HuAE8EtHEEMStf8_nl7DjknkqnHBf1SDXd0je7XXs2y2jL3SdJz3fOPtbNVyp6VOSnjXnzWzgZB8g' \
+            --header 'Content-Type: application/json' \
+            --header 'X-Tricentis: OK' \
+            --header 'Accept-Language: de'
