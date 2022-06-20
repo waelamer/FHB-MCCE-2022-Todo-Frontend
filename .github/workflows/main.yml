@@ -6,16 +6,26 @@ jobs:
     steps:
       - name: Tosca Authetication
         id: Tosca_Authetication
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://fhbkhorvath.oktapreview.com/oauth2/default/v1/token"
+          method: 'POST'
+          customHeaders: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}"},{"client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}"},{"scope","E2GApi"},{"grant_type":"client_credentials"}'
+      - name: Show Response
         run: |
+          echo ${{ steps.Tosca_Authetication.outputs.response }}
           echo "Tosca Authetication"
           echo ${{secrets.TOSCA_AUTH_CLIENT_ID}}
           echo $TOSCA_AUTH_CLIENT_ID
+          echo "Response is"
+          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response) }}
         env:
-          TOSCA_AUTH_CLIENT_ID: ${{secrets.TOSCA_AUTH_CLIENT_ID}}}
+          TOSCA_AUTH_Bearer: ${{ steps.Tosca_Authetication.outputs.response }}
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         run: |
           echo "Tosca ExecuteFlow"
+          echo $TOSCA_AUTH_Bearer
       - name: Tosca GetFlowStatus
         id: Tosca_GetFlowStatus
         run: |
