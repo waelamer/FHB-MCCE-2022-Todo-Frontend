@@ -20,7 +20,7 @@ jobs:
           echo ${{ steps.Tosca_Authetication.outputs.response.access_token }}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           echo "Tosca Authetication"
-          $TOSCA_AUTH_Bearer= ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          echo "$TOSCA_AUTH_Bearer= ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         run: |
