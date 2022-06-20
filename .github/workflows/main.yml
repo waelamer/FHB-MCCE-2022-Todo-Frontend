@@ -10,7 +10,7 @@ jobs:
         with:
           url: "https://fhbkhorvath.oktapreview.com/oauth2/default/v1/token"
           method: 'POST'
-          customHeaders: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}"},{"client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}"},{"scope","E2GApi"},{"grant_type":"client_credentials"}'
+          customHeaders: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}","client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}","scope","E2GApi","grant_type":"client_credentials"}'
       - name: Show Response
         run: |
           echo ${{ steps.Tosca_Authetication.outputs.response }}
