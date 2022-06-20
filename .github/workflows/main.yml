@@ -17,13 +17,32 @@ jobs:
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
 
+      - name: Tosca TEST AGENT
+        id: Tosca_AGENT
+        uses: fjogeleit/http-request-action@v1
+        env:
+          TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+        with:
+          url: "https://wael.my.tricentis.com/default/_e2g/api/flowExecutions"
+          method: 'POST'
+          customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+          bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
+      - name: Show Response
+        run: |
+          echo "Tosca ExecuteFlow"
+          echo ${{ steps.Tosca_AGENT.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_AGENT.outputs.response) }}
+          echo ${{ fromJson(steps.Tosca_AGENT.outputs.response).id }}
+
+
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         uses: fjogeleit/http-request-action@v1
         env:
           TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
         with:
-          url: "https://fhbkhorvath.my.tricentis.com/default/_e2g/api/flowExecutions"
+          url: "https://wael.my.tricentis.com/default/_e2g/api/flowExecutions"
           method: 'POST'
           customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
           bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
