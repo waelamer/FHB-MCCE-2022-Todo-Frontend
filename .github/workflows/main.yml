@@ -8,19 +8,20 @@ jobs:
         id: Tosca_Authetication
         uses: fjogeleit/http-request-action@v1
         with:
-          url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=Tricentis_Cloud_API&client_secret=rp3qiVhaX5hSff_h_6icMKHeOYE4zGk5pGGf3q_4&scope=E2GApi&grant_type=client_credentials"
+          url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=${{secrets.TOSCA_AUTH_CLIENT_ID}}&client_secret=${{TOSCA_AUTH_CLIENT_SECRET}}&scope=E2GApi&grant_type=client_credentials"
           method: 'POST'
           customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'
           # data: '{"client_secret":"${{secrets.TOSCA_AUTH_CLIENT_SECRET}}","client_id":"${{secrets.TOSCA_AUTH_CLIENT_ID}}","scope","E2GApi","grant_type":"client_credentials"}'
       - name: Show Response
         run: |
           echo ${{ steps.Tosca_Authetication.outputs.response }}
-          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).id }}
+          echo ${{ steps.Tosca_Authetication.outputs.response.access_token }}
+          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
           echo "Tosca Authetication"
           echo ${{secrets.TOSCA_AUTH_CLIENT_ID}}
           echo $TOSCA_AUTH_CLIENT_ID
         env:
-          TOSCA_AUTH_Bearer: ${{ steps.Tosca_Authetication.outputs.response }}
+          TOSCA_AUTH_Bearer: ${{ steps.Tosca_Authetication.outputs.response.access_token }}
       - name: Tosca ExecuteFlow
         id: Tosca_ExecuteFlow
         run: |
