@@ -26,7 +26,7 @@ jobs:
           url: "https://fhbkhorvath.my.tricentis.com/default/_e2g/api/flowExecutions"
           method: 'POST'
           customHeaders: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}","Content-Type":"application/json","X-Tricentis":"OK"}'
-          data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
+          data-row: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
       - name: Show Response
         run: |
           echo "Tosca ExecuteFlow"
@@ -41,7 +41,7 @@ jobs:
           TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
         with:
           url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/$TOSCA_AUTH_EXECUTEDFLOW_ID"
-          method: 'POST'
+          method: 'GET'
           customHeaders: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}","Content-Type":"application/json","X-Tricentis":"OK"}'
       - name: Show Response
         run: |
