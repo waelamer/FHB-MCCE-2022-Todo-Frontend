@@ -14,6 +14,21 @@ jobs:
         run: |
           npm ci
           npm run build --prod
+            - name: Deploy TODO Frontend artifacts
+        id: Deploy_Frontend_TEST
+        uses: reggionick/s3-deploy@v3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        with:
+            folder: dist
+            bucket: mcce-bb-2-ss2022-tmcsp-1
+            bucket-region: us-east-1
+            # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+            invalidation: /
+            delete-removed: true
+            no-cache: true
+            private: true
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -103,11 +118,12 @@ jobs:
       - name: Tosca ExecuteFlow >> Show Response
         run: |
           echo "Tosca E2G ExecuteFlow Succefully Executed"
-
-
-
-      - name: Deploy TODO Frontend Test
-        id: Deploy_Frontend_TEST
-        run: |
-          echo "Deploy TODO Frontend Test"
           curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
+
+
+
+          
+# [default]
+# aws_access_key_id=ASIA4GEBO7DJKADGUBGH
+# aws_secret_access_key=0gwdoIx8Uk53UH65F5s2C7fWrRt6dUbtyHTaZF1T
+# aws_session_token=FwoGZXIvYXdzEEAaDOQ/q2Yor18V5z+EAyLMARHVlgfNkMAK8G204bE7WCJ7vaq5zPiO0UUXctyN/LirAMM79GtnNVqwkOohJy53XZhL/xwfZVFQMgB+MVVXntGwkSD21Di8FA+yYDOlFzvJq3FNdvrm/M83eqsKM+io1mRAcNqkita0iEApVnpVqnCprx08w3u/n073c0u2bOf5NoHv2Pa70IGZ7LQwiJBWiicBHn7WM9MDs76me+vo5X+qAcdmr6Els6RdHdFewvs8R8watLeiFkql7jg2G0/iT2ABj1KaAj+22XYetCiKsceVBjItCo/JBVOk4ze7PoHJ5CTM6NGaf5RKBrGjzDcF+0VpRUK/0bEHgLEc/jnewd+v
