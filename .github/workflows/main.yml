@@ -71,6 +71,25 @@ jobs:
           echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
           echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
       
+      - name: Tosca GetFlowStatus v2
+        id:   Tosca_GetFlowStatus_v2
+        uses: fjogeleit/http-request-action@v1
+        env:
+          TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+        with:
+          url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}"
+          method: 'GET'
+          headers: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}'
+          expected-response-field: "currentState.name"
+          expected-response-field-value: "Succeeded"
+          timeout: "10"
+          interval: "10" 
+      - name: Tosca ExecuteFlow >> Show Response
+        run: |
+          echo ${{ steps.Tosca_GetFlowStatus_v2.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_GetFlowStatus_v2.outputs.response) }}
+
+
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
@@ -80,4 +99,3 @@ jobs:
             --header 'Content-Type: application/json' \
             --header 'X-Tricentis: OK' \
             --header 'Accept-Language: de'
-
