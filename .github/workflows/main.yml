@@ -94,4 +94,4 @@ jobs:
         id: Deploy_Frontend_TEST
         run: |
           echo "Deploy TODO Frontend Test"
-          curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}"
+          curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
