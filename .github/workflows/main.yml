@@ -82,7 +82,7 @@ jobs:
           headers: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}'
           expected-response-field: "currentState.name"
           expected-response-field-value: "Succeeded"
-          timeout: "10"
+          timeout: "200"
           interval: "10" 
       - name: Tosca ExecuteFlow >> Show Response
         run: |
