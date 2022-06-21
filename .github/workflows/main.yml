@@ -17,24 +17,23 @@ jobs:
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
 
-
-      - name: Tosca TEST AGENT
-        id: Tosca_AGENT
-        uses: fjogeleit/http-request-action@v1
-        env:
-          TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
-        with:
-          url: "https://wael.my.tricentis.com/_e2g/api/agents"
-          method: 'GET'
-          customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
-          bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
-          # data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
-      - name: Tosca TEST AGENT >> Show Response
-        run: |
-          echo "Tosca ExecuteFlow"
-          echo ${{ steps.Tosca_AGENT.outputs.response }}
-          echo ${{ fromJson(steps.Tosca_AGENT.outputs.response) }}
-          echo ${{ fromJson(steps.Tosca_AGENT.outputs.response).id }}
+      # - name: Tosca TEST AGENT
+      #   id: Tosca_AGENT
+      #   uses: fjogeleit/http-request-action@v1
+      #   env:
+      #     TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+      #   with:
+      #     url: "https://wael.my.tricentis.com/_e2g/api/agents"
+      #     method: 'GET'
+      #     customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+      #     bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          
+      # - name: Tosca TEST AGENT >> Show Response
+      #   run: |
+      #     echo "Tosca ExecuteFlow"
+      #     echo ${{ steps.Tosca_AGENT.outputs.response }}
+      #     echo ${{ fromJson(steps.Tosca_AGENT.outputs.response) }}
+      #     echo ${{ fromJson(steps.Tosca_AGENT.outputs.response).id }}
 
 
       - name: Tosca ExecuteFlow
@@ -83,21 +82,16 @@ jobs:
           headers: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}'
           expected-response-field: "currentState.name"
           expected-response-field-value: "Succeeded"
-          timeout: "200"
+          timeout: "100"
           interval: "10" 
       - name: Tosca ExecuteFlow >> Show Response
         run: |
-          echo ${{ steps.Tosca_GetFlowStatus_v2.outputs }}
-          echo ${{ steps.Tosca_GetFlowStatus_v2.outputs.response }}
-          echo ${{ fromJson(steps.Tosca_GetFlowStatus_v2.outputs.response) }}
+          echo "Tosca E2G ExecuteFlow Succefully Executed"
+
 
 
       - name: Deploy TODO Frontend Test
         id: Deploy_Frontend_TEST
         run: |
           echo "Deploy TODO Frontend Test"
-          curl --location --request GET 'https://wael.my.tricentis.com/_e2g/api/agents' \
-            --header 'Authorization: Bearer eyJraWQiOiIteE91bjMteTlmX25Ka19qajZWaHZxcTdSdGdIc0xCNzRTZ3JROFhfNktVIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULml2THlQb3NJd2o2MEdpZWlDak5NamhWSjNacUFWTkdzQUlsYkNacGp1aW8iLCJpc3MiOiJodHRwczovL3dhZWwub2t0YXByZXZpZXcuY29tL29hdXRoMi9kZWZhdWx0IiwiYXVkIjoiYXBpOi8vZGVmYXVsdCIsImlhdCI6MTY1NTc0NTIyMSwiZXhwIjoxNjU1NzQ4ODIxLCJjaWQiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwic2NwIjpbIkUyR0FwaSJdLCJzdWIiOiJUcmljZW50aXNfQ2xvdWRfQVBJIiwibmFtZSI6IiAifQ.vuzVLPxkJJ_hRtIgE0I_dCWUDaODlrs1RHI0RSpQChP4_ajgnoWY3oeyz2Ax0D_Gv1p4enFN452a_OeT07hz4LjNZhBc-qD-AWdAIj9yevxKHm3qnmLuVqOsn9S7L1kjKommvSk5We7DjhtQQUVYVg76AaHLYowYfs0M1LwlrdVd0Jx2chm8CCbB0KiMUVeWr2rue7Dzrmxcns87Y7sCHnTUIeDBOeyXP_wMLEnCnJVPKFtGvjlGa5u8Vq6z9uanBuM5Lt1Y3HuAE8EtHEEMStf8_nl7DjknkqnHBf1SDXd0je7XXs2y2jL3SdJz3fOPtbNVyp6VOSnjXnzWzgZB8g' \
-            --header 'Content-Type: application/json' \
-            --header 'X-Tricentis: OK' \
-            --header 'Accept-Language: de'
+          curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}"
