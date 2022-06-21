@@ -17,6 +17,7 @@ jobs:
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
 
+
       - name: Tosca TEST AGENT
         id: Tosca_AGENT
         uses: fjogeleit/http-request-action@v1
