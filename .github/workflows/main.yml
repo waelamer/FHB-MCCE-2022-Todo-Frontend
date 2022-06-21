@@ -54,26 +54,26 @@ jobs:
           echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response) }}
           echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
 
-      - name: Tosca GetFlowStatus
-        id: Tosca_GetFlowStatus
-        uses: fjogeleit/http-request-action@v1
-        env:
-          TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
-        with:
-          url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}"
-          method: 'GET'
-          bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
-          customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
-      - name: Tosca GetFlowStatus >> Show Response
-        run: |
-          echo "Tosca GetFlowStatus"
-          echo $TOSCA_AUTH_EXECUTEDFLOW_ID
-          echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
-          echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
+      # - name: Tosca GetFlowStatus
+      #   id: Tosca_GetFlowStatus
+      #   uses: fjogeleit/http-request-action@v1
+      #   env:
+      #     TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+      #   with:
+      #     url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}"
+      #     method: 'GET'
+      #     bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+      #     customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+      # - name: Tosca GetFlowStatus >> Show Response
+      #   run: |
+      #     echo "Tosca GetFlowStatus"
+      #     echo $TOSCA_AUTH_EXECUTEDFLOW_ID
+      #     echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
+      #     echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
       
       - name: Tosca GetFlowStatus v2
         id:   Tosca_GetFlowStatus_v2
-        uses: fjogeleit/http-request-action@v1
+        uses: mydea/action-wait-for-api@v1
         env:
           TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
         with:
@@ -86,6 +86,7 @@ jobs:
           interval: "10" 
       - name: Tosca ExecuteFlow >> Show Response
         run: |
+          echo ${{ steps.Tosca_GetFlowStatus_v2.outputs }}
           echo ${{ steps.Tosca_GetFlowStatus_v2.outputs.response }}
           echo ${{ fromJson(steps.Tosca_GetFlowStatus_v2.outputs.response) }}
 
