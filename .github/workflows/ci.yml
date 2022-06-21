@@ -24,7 +24,8 @@ jobs:
             folder: dist
             bucket: mcce-bb-2-ss2022-tmcsp-1
             bucket-region: us-east-1
-            # dist-id: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+            dist-id: 837790136530
+            #${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
             invalidation: /
             delete-removed: true
             no-cache: true
