@@ -1,21 +1,113 @@
-# name: build-and-archive-angular-app
-# on: [push]
-# jobs:
-#   build-test:
-#     runs-on: "ubuntu-latest"
-#     steps:    
-#       - name: Checkout repository
-#         uses: "actions/checkout@v2"
-#       - name: Setup Node-Environment
-#         uses: "actions/setup-node@v2"
-#         with:
-#           node-version: '12'
-#       - name: Build optimized web application
-#         run: |
-#           npm ci
-#           npm run build --prod
-#       - name: Archive production artifacts
-#         uses: actions/upload-artifact@v3
-#         with:
-#           name: dist
-#           path: dist
+name: TODO-APP-CI
+on: [push]
+jobs:
+  TODO-APP-CI:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: Compile and Build Checkout repository
+        uses: "actions/checkout@v2"
+      - name: Setup Node-Environment
+        uses: "actions/setup-node@v2"
+        with:
+          node-version: '12'
+      - name: Build optimized web application
+        run: |
+          npm ci
+          npm run build --prod
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+
+      - name: Tosca Authetication
+        id: Tosca_Authetication
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://wael.oktapreview.com/oauth2/default/v1/token?client_id=${{secrets.TOSCA_AUTH_CLIENT_ID}}&client_secret=${{secrets.TOSCA_AUTH_CLIENT_SECRET}}&scope=E2GApi&grant_type=client_credentials"
+          method: 'POST'
+          customHeaders: '{"Content-Type":"application/x-www-form-urlencoded"}'          
+      - name:  Tosca Authetication >> Show Response
+        run: |
+          echo ${{ steps.Tosca_Authetication.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
+          echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+
+      # - name: Tosca TEST AGENT
+      #   id: Tosca_AGENT
+      #   uses: fjogeleit/http-request-action@v1
+      #   env:
+      #     TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+      #   with:
+      #     url: "https://wael.my.tricentis.com/_e2g/api/agents"
+      #     method: 'GET'
+      #     customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+      #     bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          
+      # - name: Tosca TEST AGENT >> Show Response
+      #   run: |
+      #     echo "Tosca ExecuteFlow"
+      #     echo ${{ steps.Tosca_AGENT.outputs.response }}
+      #     echo ${{ fromJson(steps.Tosca_AGENT.outputs.response) }}
+      #     echo ${{ fromJson(steps.Tosca_AGENT.outputs.response).id }}
+
+
+      - name: Tosca ExecuteFlow
+        id: Tosca_ExecuteFlow
+        uses: fjogeleit/http-request-action@v1
+        env:
+          TOSCA_AUTH_Bearer: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+        with:
+          url: "https://wael.my.tricentis.com/default/_e2g/api/flowExecutions"
+          method: 'POST'
+          customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+          bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+          data: '{"flowId":"${{secrets.TOSCA_AUTH_FLOWID}}","timeoutInMinutes":"3000"}'
+      - name: Tosca ExecuteFlow >> Show Response
+        run: |
+          echo "Tosca ExecuteFlow"
+          echo ${{ steps.Tosca_ExecuteFlow.outputs.response }}
+          echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response) }}
+          echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+
+      # - name: Tosca GetFlowStatus
+      #   id: Tosca_GetFlowStatus
+      #   uses: fjogeleit/http-request-action@v1
+      #   env:
+      #     TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+      #   with:
+      #     url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}"
+      #     method: 'GET'
+      #     bearerToken: ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
+      #     customHeaders: '{"Content-Type":"application/json","X-Tricentis":"OK"}'
+      # - name: Tosca GetFlowStatus >> Show Response
+      #   run: |
+      #     echo "Tosca GetFlowStatus"
+      #     echo $TOSCA_AUTH_EXECUTEDFLOW_ID
+      #     echo ${{ steps.Tosca_GetFlowStatus.outputs.response }}
+      #     echo ${{ fromJson(steps.Tosca_GetFlowStatus.outputs.response) }}      
+      
+      - name: Tosca GetFlowStatus v2
+        id:   Tosca_GetFlowStatus_v2
+        uses: mydea/action-wait-for-api@v1
+        env:
+          TOSCA_AUTH_EXECUTEDFLOW_ID: ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
+        with:
+          url: "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}"
+          method: 'GET'
+          headers: '{"Authorization":"Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"}'
+          expected-response-field: "currentState.name"
+          expected-response-field-value: "Succeeded"
+          timeout: "100"
+          interval: "10" 
+      - name: Tosca ExecuteFlow >> Show Response
+        run: |
+          echo "Tosca E2G ExecuteFlow Succefully Executed"
+
+
+
+      - name: Deploy TODO Frontend Test
+        id: Deploy_Frontend_TEST
+        run: |
+          echo "Deploy TODO Frontend Test"
+          curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
