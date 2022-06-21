@@ -14,7 +14,7 @@ jobs:
         run: |
           npm ci
           npm run build --prod
-            - name: Deploy TODO Frontend artifacts
+      - name: Deploy TODO Frontend artifacts
         id: Deploy_Frontend_TEST
         uses: reggionick/s3-deploy@v3
         env:
