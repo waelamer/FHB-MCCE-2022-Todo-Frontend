@@ -14,17 +14,6 @@ jobs:
         run: |
           npm ci
           npm run build --prod
-      - name: Deploy TODO Frontend artifacts
-        id: Deploy_Frontend_TEST
-        uses: aws-actions/configure-aws-credentials@v1
-        # uses: reggionick/s3-deploy@v3
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      - name: Deploy app build to S3 bucket
-        run: aws s3 sync ./dist/ s3://mcce-bb-2-ss2022-tmcsp-1 --delete
-        
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -43,7 +32,6 @@ jobs:
           echo ${{ steps.Tosca_Authetication.outputs.response }}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response)}}
           echo ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}
-
       # - name: Tosca TEST AGENT
       #   id: Tosca_AGENT
       #   uses: fjogeleit/http-request-action@v1
@@ -80,7 +68,6 @@ jobs:
           echo ${{ steps.Tosca_ExecuteFlow.outputs.response }}
           echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response) }}
           echo ${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}
-
       # - name: Tosca GetFlowStatus
       #   id: Tosca_GetFlowStatus
       #   uses: fjogeleit/http-request-action@v1
@@ -114,12 +101,8 @@ jobs:
       - name: Tosca ExecuteFlow >> Show Response
         run: |
           echo "Tosca E2G ExecuteFlow Succefully Executed"
+      - name: Deploy TODO Frontend Test
+        id: Deploy_Frontend_TEST
+        run: |
+          echo "Deploy TODO Frontend Test"
           curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
-
-
-
-          
-# [default]
-# aws_access_key_id=ASIA4GEBO7DJKADGUBGH
-# aws_secret_access_key=0gwdoIx8Uk53UH65F5s2C7fWrRt6dUbtyHTaZF1T
-# aws_session_token=FwoGZXIvYXdzEEAaDOQ/q2Yor18V5z+EAyLMARHVlgfNkMAK8G204bE7WCJ7vaq5zPiO0UUXctyN/LirAMM79GtnNVqwkOohJy53XZhL/xwfZVFQMgB+MVVXntGwkSD21Di8FA+yYDOlFzvJq3FNdvrm/M83eqsKM+io1mRAcNqkita0iEApVnpVqnCprx08w3u/n073c0u2bOf5NoHv2Pa70IGZ7LQwiJBWiicBHn7WM9MDs76me+vo5X+qAcdmr6Els6RdHdFewvs8R8watLeiFkql7jg2G0/iT2ABj1KaAj+22XYetCiKsceVBjItCo/JBVOk4ze7PoHJ5CTM6NGaf5RKBrGjzDcF+0VpRUK/0bEHgLEc/jnewd+v
