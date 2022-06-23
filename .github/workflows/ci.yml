@@ -101,8 +101,8 @@ jobs:
       - name: Tosca ExecuteFlow >> Show Response
         run: |
           echo "Tosca E2G ExecuteFlow Succefully Executed"
-      - name: Deploy TODO Frontend Test
-        id: Deploy_Frontend_TEST
+      - name: Display TestCases Result
+        id: Display_TC_Results
         run: |
-          echo "Deploy TODO Frontend Test"
+          echo "Display TestCases Result"
           curl -X GET "https://wael.my.tricentis.com/default/_e2g/api/executionPackageRuns/${{ fromJson(steps.Tosca_ExecuteFlow.outputs.response).id }}/jUnit" -H  "accept: application/json" -H  "Authorization: Bearer ${{ fromJson(steps.Tosca_Authetication.outputs.response).access_token }}"
